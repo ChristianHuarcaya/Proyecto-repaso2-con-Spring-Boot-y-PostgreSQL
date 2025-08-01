@@ -1,0 +1,27 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos del IDE
+*.iml
+.idea/
+*.log
+*.class
+
+# Maven / Gradle
+target/
+build/
+
+# Archivos del sistema operativo
+*.swp
+*.bak
+
+# Configuración sensible
+application.properties
+application.yml
+
+# Archivos temporales
+*.tmp
+
+# Archivos de test
+test-output/
