@@ -1,8 +1,12 @@
 package com.idat.semana2.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -70,5 +75,48 @@ public class PersonaController {
 	public boolean eliminar(@PathVariable("id") Long id) {
 		return service.eliminar(id);
 	}
+
+	// Buscar personas por nombre y apellidos
+	@GetMapping("/buscarNombreApellido")
+	public ResponseEntity<List<Persona>> buscarNombreApellido(String nombre, String apellidos) throws IOException {
+	    List<Persona> lista =null; service.buscarNombreApellido(nombre, apellidos);
+
+	    if (lista == null || lista.isEmpty()) {
+	        throw new IOException("No se encontraron personas con esos datos");
+	    }
+
+	    return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+
+
+	
+
+	@GetMapping(value = "/listarPersonas")
+	public ResponseEntity<List<Persona>> listarPersonas(Long id) {
+		List<Persona> lista = service.listarPersonas(id);
+		return new ResponseEntity<List<Persona>>(lista, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/listarPersonasNativo")
+	public ResponseEntity<List<Persona>> listarPersonasNativo() {
+		List<Persona> lista = service.listarPersonasNativa();
+		return new ResponseEntity<List<Persona>>(lista, HttpStatus.OK);
+	}
+	
+	@GetMapping("/listarTodas")
+	public ResponseEntity<List<Persona>> listarTodas() {
+	    List<Persona> lista = service.listarPersonasNativa();
+	    return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
+    @Autowired
+	private MessageSource messageSource;
+    
+    @GetMapping (value = "saludar")
+	public String saludar(@RequestHeader(name ="Content-Languaje", required = false)Locale locale)
+    {
+		return messageSource.getMessage("buenos.dias.mensaje",null, locale);
+	}
+
 
 }
